@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Nhân Sự - Hatechno HRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">HATECHNO HRM</a>
+        <div class="d-flex text-white align-items-center">
+            <span class="me-3"><i class="fa-solid fa-user-circle me-1"></i> Phạm Văn Vũ</span>
+            <a href="login.html" class="btn btn-outline-light btn-sm">Đăng xuất</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <div class="col-md-2 mb-3">
+            <div class="list-group shadow-sm">
+                <a href="#" class="list-group-item list-group-item-action active">
+                    <i class="fa-solid fa-users me-2"></i> Nhân sự
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fa-solid fa-calendar-check me-2"></i> Chấm công
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fa-solid fa-money-bill-wave me-2"></i> Tính lương
+                </a>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 fw-bold text-primary">Danh Sách Nhân Viên</h5>
+                    <!-- Nút kích hoạt Modal Pop-up -->
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+                        <i class="fa-solid fa-plus me-1"></i> Thêm Nhân Viên
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0" id="employeeTable">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Mã NV</th>
+                            <th>Họ và Tên</th>
+                            <th>Phòng ban</th>
+                            <th>Chức vụ</th>
+                            <th>Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>NV001</strong></td>
+                            <td>Phạm Văn Vũ</td>
+                            <td>Phòng CNTT</td>
+                            <td>Frontend Dev</td>
+                            <td><span class="badge bg-success">Chính thức</span></td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-danger btn-delete"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL THÊM NHÂN VIÊN (Pop-up) -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold">Thêm Nhân Viên Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addEmployeeForm">
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Mã Nhân Viên</label>
+                        <input type="text" class="form-control" id="empCode" placeholder="NV002" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Họ và Tên</label>
+                        <input type="text" class="form-control" id="empName" placeholder="Nguyễn Văn A" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phòng ban</label>
+                        <select class="form-select" id="empDept">
+                            <option value="Phòng CNTT">Phòng CNTT</option>
+                            <option value="Phòng Nhân sự">Phòng Nhân sự</option>
+                            <option value="Phòng Kế toán">Phòng Kế toán</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Chức vụ</label>
+                        <input type="text" class="form-control" id="empRole" placeholder="Developer / Chuyên viên" required>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu nhân viên</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/main.js"></script>
+</body>
+</html>

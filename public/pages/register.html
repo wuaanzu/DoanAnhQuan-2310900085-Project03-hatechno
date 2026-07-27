@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - HATECHNO HRM</title>
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="auth-particles" id="particles"></div>
+
+<div class="auth-container wide">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="logo-icon"><i class="fa-solid fa-user-plus"></i></div>
+            <div class="logo-title">HATECHNO HRM</div>
+            <div class="logo-sub">Tạo tài khoản mới</div>
+        </div>
+
+        <div class="auth-alert error" id="regAlert">
+            <i class="fa-solid fa-circle-xmark"></i>
+            <span id="regAlertMsg"></span>
+        </div>
+        <div class="auth-alert success" id="regSuccess">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Đăng ký thành công! Đang chuyển đến trang đăng nhập...</span>
+        </div>
+
+        <form class="auth-form" id="regForm" novalidate enctype="multipart/form-data">
+
+            <!-- Avatar Upload -->
+            <div class="form-group">
+                <label>Ảnh đại diện</label>
+                <div class="avatar-upload-area" id="avatarArea">
+                    <input type="file" id="avatarInput" name="avatar" accept="image/*">
+                    <img class="upload-preview" id="avatarPreview" alt="Preview">
+                    <div class="upload-icon"><i class="fa-solid fa-camera"></i></div>
+                    <div class="upload-text">Nhấn hoặc kéo thả ảnh vào đây<br><small>PNG, JPG, WEBP (tối đa 5MB)</small></div>
+                </div>
+            </div>
+
+            <div class="form-grid-2">
+                <!-- Họ tên -->
+                <div class="form-group">
+                    <label for="hoTen">Họ và tên <span style="color:#f87171">*</span></label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" id="hoTen" name="hoTen" placeholder="Nguyễn Văn A">
+                    </div>
+                    <div class="field-error" id="hoTenError"><i class="fa-solid fa-circle-exclamation"></i> Vui lòng nhập họ tên</div>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="tenDangNhap">Tên đăng nhập <span style="color:#f87171">*</span></label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-at"></i></span>
+                        <input type="text" id="tenDangNhap" name="tenDangNhap" placeholder="username123">
+                    </div>
+                    <div class="field-error" id="tenDangNhapError"><i class="fa-solid fa-circle-exclamation"></i> Vui lòng nhập tên đăng nhập</div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email <span style="color:#f87171">*</span></label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" id="email" name="email" placeholder="email@hatechno.vn">
+                    </div>
+                    <div class="field-error" id="emailError"><i class="fa-solid fa-circle-exclamation"></i> Email không hợp lệ</div>
+                </div>
+
+                <!-- SĐT -->
+                <div class="form-group">
+                    <label for="dienThoai">Số điện thoại</label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-phone"></i></span>
+                        <input type="tel" id="dienThoai" name="dienThoai" placeholder="0901234567">
+                    </div>
+                </div>
+
+                <!-- Mật khẩu -->
+                <div class="form-group">
+                    <label for="password">Mật khẩu <span style="color:#f87171">*</span></label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="password" name="password" placeholder="Ít nhất 6 ký tự">
+                        <button type="button" class="toggle-password" onclick="togglePw('password', 'pwIcon1')">
+                            <i class="fa-solid fa-eye" id="pwIcon1"></i>
+                        </button>
+                    </div>
+                    <div class="field-error" id="passwordError"><i class="fa-solid fa-circle-exclamation"></i> Mật khẩu ít nhất 6 ký tự</div>
+                </div>
+
+                <!-- Xác nhận mật khẩu -->
+                <div class="form-group">
+                    <label for="confirmPassword">Xác nhận mật khẩu <span style="color:#f87171">*</span></label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu">
+                        <button type="button" class="toggle-password" onclick="togglePw('confirmPassword', 'pwIcon2')">
+                            <i class="fa-solid fa-eye" id="pwIcon2"></i>
+                        </button>
+                    </div>
+                    <div class="field-error" id="confirmPasswordError"><i class="fa-solid fa-circle-exclamation"></i> Mật khẩu không khớp</div>
+                </div>
+
+                <!-- Phòng ban -->
+                <div class="form-group">
+                    <label for="maPhongBan">Phòng ban</label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-building"></i></span>
+                        <select id="maPhongBan" name="maPhongBan">
+                            <option value="">-- Chọn phòng ban --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Chức vụ -->
+                <div class="form-group">
+                    <label for="maChucVu">Chức vụ</label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa-solid fa-briefcase"></i></span>
+                        <select id="maChucVu" name="maChucVu">
+                            <option value="3">Nhân Viên</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-auth" id="regBtn">
+                <span class="btn-text"><i class="fa-solid fa-user-plus"></i> Tạo tài khoản</span>
+                <span class="btn-loading"><span class="mini-spinner"></span> Đang đăng ký...</span>
+            </button>
+        </form>
+
+        <div class="auth-switch">
+            Đã có tài khoản? <a href="/login">Đăng nhập</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Particles
+    (function() {
+        const c = document.getElementById('particles');
+        for (let i = 0; i < 15; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.cssText = `left:${Math.random()*100}%;width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.4}`;
+            c.appendChild(p);
+        }
+    })();
+
+    // Toggle password visibility
+    function togglePw(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === 'password') { input.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
+        else { input.type = 'password'; icon.className = 'fa-solid fa-eye'; }
+    }
+
+    // Avatar preview
+    document.getElementById('avatarInput').addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const preview = document.getElementById('avatarPreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.querySelector('.upload-icon').style.display = 'none';
+                document.querySelector('.upload-text').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Load departments & positions
+    async function loadSelects() {
+        try {
+            const [depts, pos] = await Promise.all([
+                fetch('/api/departments', { headers: { Authorization: `Bearer ${localStorage.getItem('hrm_token')}` } }).then(r => r.json()),
+                fetch('/api/positions', { headers: { Authorization: `Bearer ${localStorage.getItem('hrm_token')}` } }).then(r => r.json())
+            ]);
+
+            if (depts.data) {
+                const sel = document.getElementById('maPhongBan');
+                depts.data.forEach(d => {
+                    sel.innerHTML += `<option value="${d.MaPhongBan}">${d.TenPhongBan}</option>`;
+                });
+            }
+
+            if (pos.data) {
+                const sel = document.getElementById('maChucVu');
+                sel.innerHTML = '';
+                pos.data.forEach(p => {
+                    sel.innerHTML += `<option value="${p.MaChucVu}"${p.MaChucVu==3?' selected':''}>${p.TenChucVu}</option>`;
+                });
+            }
+        } catch(e) { console.log('Could not load selects'); }
+    }
+    loadSelects();
+
+    // Form submit
+    document.getElementById('regForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        let valid = true;
+
+        const fields = [
+            { id: 'hoTen', errId: 'hoTenError', check: v => v.trim().length >= 2 },
+            { id: 'tenDangNhap', errId: 'tenDangNhapError', check: v => v.trim().length >= 3 },
+            { id: 'email', errId: 'emailError', check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+            { id: 'password', errId: 'passwordError', check: v => v.length >= 6 },
+            { id: 'confirmPassword', errId: 'confirmPasswordError', check: v => v === document.getElementById('password').value }
+        ];
+
+        fields.forEach(f => {
+            const val = document.getElementById(f.id).value;
+            const ok = f.check(val);
+            document.getElementById(f.id).classList.toggle('error', !ok);
+            document.getElementById(f.errId).classList.toggle('show', !ok);
+            if (!ok) valid = false;
+        });
+
+        if (!valid) return;
+
+        const btn = document.getElementById('regBtn');
+        btn.classList.add('loading');
+        btn.disabled = true;
+
+        try {
+            const formData = new FormData(this);
+
+            const res = await fetch('/api/auth/register', { method: 'POST', body: formData });
+            const data = await res.json();
+
+            if (data.success) {
+                document.getElementById('regSuccess').classList.add('show');
+                setTimeout(() => window.location.href = '/login', 2000);
+            } else {
+                const alert = document.getElementById('regAlert');
+                document.getElementById('regAlertMsg').textContent = data.message || 'Đăng ký thất bại';
+                alert.classList.add('show');
+                setTimeout(() => alert.classList.remove('show'), 4000);
+            }
+        } catch(err) {
+            document.getElementById('regAlertMsg').textContent = 'Lỗi kết nối';
+            document.getElementById('regAlert').classList.add('show');
+        } finally {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>

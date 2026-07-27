@@ -1,0 +1,249 @@
+/**
+ * HATECHNO HRM - Shared Layout CSS
+ * Kết hợp Bootstrap 5 + Custom Design System
+ * Tích hợp từ repo PhamVanVu
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --sidebar-width: 250px;
+    --sidebar-bg: #0f172a;
+    --topbar-height: 60px;
+}
+
+* { font-family: 'Poppins', sans-serif; }
+
+/* ===== Layout Shell ===== */
+body { background-color: #f1f5f9; overflow-x: hidden; }
+[data-bs-theme="dark"] body { background-color: #0f172a; }
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== Sidebar ===== */
+.sidebar-wrapper {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    min-height: 100vh;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 1040;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+#sidebar { height: 100%; }
+
+.sidebar-wrapper .nav-link {
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+}
+
+.sidebar-wrapper .nav-link:hover:not(.active) {
+    background: rgba(255,255,255,0.08) !important;
+    color: white !important;
+    transform: translateX(3px);
+}
+
+.sidebar-wrapper .nav-link.active {
+    background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+}
+
+/* ===== Main Content ===== */
+.content-wrapper {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left 0.3s;
+}
+
+#topNavbar { position: sticky; top: 0; z-index: 100; }
+
+.page-content {
+    padding: 24px;
+    flex: 1;
+}
+
+/* ===== Page Header ===== */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.page-header h5 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--bs-body-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-header h5 .page-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #2563EB, #7C3AED);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 15px;
+}
+
+/* ===== Stat Cards (từ repo PhamVanVu style) ===== */
+.stat-card {
+    border-radius: 14px;
+    border: none;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+}
+
+.stat-card .stat-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+}
+
+.stat-value { font-size: 24px; font-weight: 700; line-height: 1; }
+.stat-label { font-size: 12px; color: var(--bs-secondary-color); font-weight: 500; }
+
+/* ===== Tables (lấy từ style.css repo PhamVanVu) ===== */
+.table thead th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--bs-secondary-color);
+    font-weight: 600;
+    background-color: var(--bs-tertiary-bg);
+    border-bottom: 2px solid var(--bs-border-color);
+    white-space: nowrap;
+    padding: 10px 14px;
+}
+
+.table tbody tr {
+    transition: background-color 0.15s;
+}
+
+.table tbody td {
+    padding: 10px 14px;
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+.table-hover tbody tr:hover { background-color: rgba(37,99,235,0.04); }
+
+/* ===== Cards ===== */
+.card {
+    border-radius: 14px;
+    border: 1px solid var(--bs-border-color);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+}
+
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.card-header { padding: 14px 18px; font-weight: 600; }
+
+/* ===== Buttons ===== */
+.btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563EB, #1D4ED8);
+    border: none;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
+.btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+
+.btn-success { background: linear-gradient(135deg, #059669, #10B981); border: none; }
+.btn-danger  { background: linear-gradient(135deg, #DC2626, #EF4444); border: none; }
+.btn-warning { background: linear-gradient(135deg, #D97706, #F59E0B); border: none; }
+.btn-info    { background: linear-gradient(135deg, #0891B2, #06B6D4); border: none; }
+
+/* ===== Avatar in table (từ style.css PhamVanVu) ===== */
+.avatar-sm {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--bs-border-color);
+}
+
+.employee-cell { display: flex; align-items: center; gap: 10px; }
+.employee-name { font-weight: 600; font-size: 13px; }
+.employee-code { font-size: 11px; color: var(--bs-secondary-color); }
+
+/* ===== Filter Bar ===== */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--bs-border-color);
+    background: var(--bs-tertiary-bg);
+    border-radius: 14px 14px 0 0;
+}
+
+.filter-bar .form-control,
+.filter-bar .form-select { font-size: 13px; }
+
+/* ===== Pagination ===== */
+.pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-top: 1px solid var(--bs-border-color);
+    font-size: 12px;
+    color: var(--bs-secondary-color);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ===== Modal (Bootstrap 5 style) ===== */
+.modal-content { border-radius: 16px; border: none; }
+.modal-header { border-radius: 16px 16px 0 0; }
+.modal-header.bg-primary { background: linear-gradient(135deg, #2563EB, #7C3AED) !important; }
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+    .sidebar-wrapper { transform: translateX(-100%); }
+    .sidebar-wrapper.show { transform: translateX(0); box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
+    .content-wrapper { margin-left: 0; }
+}
+
+@media (max-width: 576px) {
+    .page-content { padding: 14px; }
+    .filter-bar { flex-direction: column; }
+    .stat-value { font-size: 20px; }
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bs-border-color); border-radius: 10px; }
+
+/* ===== Utility ===== */
+.money { font-weight: 600; font-variant-numeric: tabular-nums; }
+.money-positive { color: #059669; }
+.money-negative { color: #DC2626; }
+.text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }

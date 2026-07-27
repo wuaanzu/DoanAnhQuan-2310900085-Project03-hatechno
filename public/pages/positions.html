@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chức vụ - HATECHNO HRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/layout.css">
+</head>
+<body>
+<div class="app-layout">
+    <div class="sidebar-wrapper"><div id="sidebar"></div></div>
+    <div class="content-wrapper">
+        <div id="topNavbar"></div>
+        <div class="page-content">
+            <div class="page-header">
+                <h5><span class="page-icon"><i class="fa-solid fa-briefcase"></i></span>Quản lý Chức vụ</h5>
+                <button class="btn btn-primary btn-sm" id="btnAdd"><i class="fa-solid fa-plus me-2"></i>Thêm chức vụ</button>
+            </div>
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>STT</th><th>Tên chức vụ</th><th>Phụ cấp</th><th>Số NV</th><th>Mô tả</th><th class="text-center">Thao tác</th></tr></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mainModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white"><h5 class="modal-title fw-bold" id="modalTitle">Chức vụ</h5><button class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <form id="mainForm"><input type="hidden" id="itemId">
+                    <div class="mb-3"><label class="form-label fw-semibold">Tên chức vụ <span class="text-danger">*</span></label><input type="text" class="form-control" id="fTen" placeholder="Giám đốc" required></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Phụ cấp (VNĐ)</label><input type="number" class="form-control" id="fPhuCap" placeholder="1000000"></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Mô tả</label><textarea class="form-control" id="fMoTa" rows="3"></textarea></div>
+                </form>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button class="btn btn-primary" id="btnSave"><i class="fa-solid fa-floppy-disk me-2"></i>Lưu</button></div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+<script>
+requireAuth(); renderLayout('positions');
+let editId = null;
+const bsModal = () => bootstrap.Modal.getOrCreateInstance(document.getElementById('mainModal'));
+
+async function loadData() {
+    const res = await API.get('/positions');
+    const data = res?.data?.data || [];
+    const isManager = hasRole(['Admin','NhanSu']);
+    document.getElementById('tableBody').innerHTML = data.length
+        ? data.map((d,i) => `<tr>
+            <td>${i+1}</td>
+            <td><strong>${fmt.esc(d.TenChucVu)}</strong></td>
+            <td class="money money-positive">${fmt.money(d.PhuCap)}</td>
+            <td><span class="badge bg-info-subtle text-info">${d.SoNhanVien||0} NV</span></td>
+            <td class="small text-muted">${fmt.esc(d.MoTa||'--')}</td>
+            <td class="text-center"><div class="d-flex gap-1 justify-content-center">
+                ${isManager ? `
+                <button class="btn btn-sm btn-outline-primary" onclick="editItem(${d.MaChucVu})"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn btn-sm btn-outline-danger" onclick="delItem(${d.MaChucVu},'${fmt.esc(d.TenChucVu)}')"><i class="fa-solid fa-trash"></i></button>
+                ` : '--'}
+            </div></td>
+        </tr>`).join('')
+        : `<tr><td colspan="6" class="text-center py-5 text-muted"><i class="fa-solid fa-briefcase fa-2x mb-2 d-block"></i>Chưa có chức vụ</td></tr>`;
+}
+
+document.getElementById('btnAdd').addEventListener('click', () => {
+    editId = null; document.getElementById('mainForm').reset();
+    document.getElementById('modalTitle').textContent = 'Thêm chức vụ';
+    bsModal().show();
+});
+
+async function editItem(id) {
+    const res = await API.get(`/positions/${id}`); if (!res?.ok) return;
+    const d = res.data.data; editId = id;
+    document.getElementById('modalTitle').textContent = 'Cập nhật chức vụ';
+    document.getElementById('fTen').value = d.TenChucVu;
+    document.getElementById('fPhuCap').value = d.PhuCap;
+    document.getElementById('fMoTa').value = d.MoTa||'';
+    bsModal().show();
+}
+
+function delItem(id, name) {
+    showConfirm(`Xóa chức vụ <strong>${name}</strong>?`, 'Xóa', async () => {
+        const res = await API.del(`/positions/${id}`);
+        res?.ok ? (showToast('Đã xóa','success'), loadData()) : showToast('Lỗi xóa','danger');
+    });
+}
+
+document.getElementById('btnSave').addEventListener('click', async () => {
+    const data = { tenChucVu: document.getElementById('fTen').value.trim(), phuCap: document.getElementById('fPhuCap').value||0, moTa: document.getElementById('fMoTa').value };
+    if (!data.tenChucVu) return showToast('Vui lòng nhập tên chức vụ','warning');
+    const res = editId ? await API.put(`/positions/${editId}`, data) : await API.post('/positions', data);
+    if (res?.ok) { showToast(editId?'Cập nhật thành công':'Thêm thành công','success'); bsModal().hide(); loadData(); }
+    else showToast(res?.data?.message||'Lỗi lưu','danger');
+});
+loadData();
+</script>
+</body>
+</html>

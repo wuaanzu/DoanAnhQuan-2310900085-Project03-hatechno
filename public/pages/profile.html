@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ cá nhân - HATECHNO HRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="sidebar-mobile-overlay" id="sidebarOverlay"></div>
+<div class="app-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><div class="sidebar-logo"><i class="fa-solid fa-shield-halved"></i></div><div class="sidebar-brand">HATECHNO<span>HR Management</span></div></div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-pie"></i></div><span class="nav-label">Dashboard</span></a>
+            <a href="/employees" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-users"></i></div><span class="nav-label">Nhân viên</span></a>
+            <a href="/salary" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-money-bill-wave"></i></div><span class="nav-label">Bảng lương</span></a>
+            <a href="/leaves" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-xmark"></i></div><span class="nav-label">Nghỉ phép</span></a>
+            <a href="/reports" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-bar"></i></div><span class="nav-label">Báo cáo</span></a>
+            <a href="/profile" class="nav-item active"><div class="nav-icon"><i class="fa-solid fa-circle-user"></i></div><span class="nav-label">Hồ sơ</span></a>
+        </nav>
+        <div class="sidebar-footer"><div class="sidebar-user"><img src="" class="sidebar-user-avatar" id="sidebarAvatar" alt=""><div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebarUserName"></div><div class="sidebar-user-role" id="sidebarUserRole"></div></div></div></div>
+    </aside>
+    <div class="main-content" id="mainContent">
+        <nav class="navbar-top">
+            <button class="navbar-toggle" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+            <span class="navbar-title">Hồ sơ cá nhân</span>
+            <div class="navbar-actions" style="margin-left:auto">
+                <button id="themeToggle" class="theme-toggle"></button>
+                <div class="dropdown"><img src="" alt="" class="navbar-avatar" id="navAvatar" data-dropdown-toggle="navDropdown"><div class="dropdown-menu" id="navDropdown"><div class="dropdown-item danger" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</div></div></div>
+            </div>
+        </nav>
+        <div class="page-content">
+            <div class="page-title mb-5"><i class="fa-solid fa-circle-user"></i> Hồ sơ cá nhân</div>
+
+            <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start">
+
+                <!-- Left: Profile Card -->
+                <div>
+                    <div class="card">
+                        <div class="profile-card">
+                            <div class="profile-avatar-wrap">
+                                <img src="" alt="Avatar" class="profile-avatar" id="profileAvatar">
+                                <label class="profile-avatar-edit" for="avatarFile" title="Đổi ảnh">
+                                    <i class="fa-solid fa-camera"></i>
+                                </label>
+                                <input type="file" id="avatarFile" accept="image/*" style="display:none">
+                            </div>
+                            <div class="profile-name" id="profileName">--</div>
+                            <div class="profile-role" id="profileRole">--</div>
+                            <div style="margin-top:12px" id="profileBadge"></div>
+                        </div>
+                        <div style="padding:0 16px 16px">
+                            <div class="salary-slip-row"><span class="text-muted text-sm">Phòng ban</span><span id="profileDept" class="fw-600 text-sm">--</span></div>
+                            <div class="salary-slip-row"><span class="text-muted text-sm">Ngày vào làm</span><span id="profileJoinDate" class="text-sm">--</span></div>
+                            <div class="salary-slip-row"><span class="text-muted text-sm">Lương cơ bản</span><span id="profileSalaryBase" class="money fw-600">--</span></div>
+                            <div class="salary-slip-row"><span class="text-muted text-sm">Trạng thái</span><span id="profileStatus">--</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Tabs -->
+                <div>
+                    <div class="card">
+                        <!-- Tab nav -->
+                        <div style="display:flex;border-bottom:1px solid var(--border);padding:0 20px">
+                            <button class="tab-btn active" data-tab="info" style="padding:14px 16px;border:none;background:none;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary);margin-bottom:-1px">
+                                <i class="fa-solid fa-user"></i> Thông tin
+                            </button>
+                            <button class="tab-btn" data-tab="password" style="padding:14px 16px;border:none;background:none;font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px">
+                                <i class="fa-solid fa-lock"></i> Mật khẩu
+                            </button>
+                            <button class="tab-btn" data-tab="salary" style="padding:14px 16px;border:none;background:none;font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px">
+                                <i class="fa-solid fa-money-bill"></i> Lịch sử lương
+                            </button>
+                        </div>
+
+                        <!-- Info Tab -->
+                        <div class="tab-content active" id="tab-info">
+                            <div class="card-body">
+                                <form id="infoForm">
+                                    <div class="grid-2">
+                                        <div class="form-group"><label class="form-label">Họ và tên</label><input type="text" class="form-control" id="fHoTen" readonly style="background:var(--bg-body)"></div>
+                                        <div class="form-group"><label class="form-label">Mã nhân viên</label><input type="text" class="form-control" id="fMaNV" readonly style="background:var(--bg-body)"></div>
+                                        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" id="fEmail" readonly style="background:var(--bg-body)"></div>
+                                        <div class="form-group"><label class="form-label">Số điện thoại</label><input type="text" class="form-control" id="fDienThoai" placeholder="Nhập số điện thoại"></div>
+                                        <div class="form-group"><label class="form-label">Ngày sinh</label><input type="date" class="form-control" id="fNgaySinh" readonly style="background:var(--bg-body)"></div>
+                                        <div class="form-group"><label class="form-label">CCCD</label><input type="text" class="form-control" id="fCCCD" readonly style="background:var(--bg-body)"></div>
+                                    </div>
+                                    <div class="form-group"><label class="form-label">Địa chỉ</label><input type="text" class="form-control" id="fDiaChi" placeholder="Nhập địa chỉ"></div>
+                                </form>
+                                <div style="text-align:right;margin-top:8px">
+                                    <button class="btn btn-primary" id="btnSaveInfo"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Tab -->
+                        <div class="tab-content" id="tab-password" style="display:none">
+                            <div class="card-body" style="max-width:440px">
+                                <form id="pwForm">
+                                    <div class="form-group"><label class="form-label">Mật khẩu hiện tại</label>
+                                        <div class="input-group"><span class="input-group-icon"><i class="fa-solid fa-lock"></i></span><input type="password" class="form-control" id="fCurPw" placeholder="Mật khẩu hiện tại"><button type="button" class="input-group-btn" onclick="togglePw('fCurPw',this)"><i class="fa-solid fa-eye"></i></button></div>
+                                    </div>
+                                    <div class="form-group"><label class="form-label">Mật khẩu mới</label>
+                                        <div class="input-group"><span class="input-group-icon"><i class="fa-solid fa-lock"></i></span><input type="password" class="form-control" id="fNewPw" placeholder="Ít nhất 6 ký tự"><button type="button" class="input-group-btn" onclick="togglePw('fNewPw',this)"><i class="fa-solid fa-eye"></i></button></div>
+                                    </div>
+                                    <div class="form-group"><label class="form-label">Xác nhận mật khẩu mới</label>
+                                        <div class="input-group"><span class="input-group-icon"><i class="fa-solid fa-lock"></i></span><input type="password" class="form-control" id="fConfirmPw" placeholder="Nhập lại mật khẩu mới"><button type="button" class="input-group-btn" onclick="togglePw('fConfirmPw',this)"><i class="fa-solid fa-eye"></i></button></div>
+                                    </div>
+                                </form>
+                                <button class="btn btn-primary" id="btnSavePw"><i class="fa-solid fa-key"></i> Đổi mật khẩu</button>
+                            </div>
+                        </div>
+
+                        <!-- Salary History Tab -->
+                        <div class="tab-content" id="tab-salary" style="display:none">
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead><tr><th>Tháng/Năm</th><th>Tổng thu nhập</th><th>Khấu trừ</th><th>Thực nhận</th><th>Trạng thái</th></tr></thead>
+                                    <tbody id="salaryHistoryTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/utils.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    const currentUser = AuthCheck.require();
+
+    function togglePw(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') { input.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
+        else { input.type = 'password'; icon.className = 'fa-solid fa-eye'; }
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.style.color = 'var(--text-muted)';
+                b.style.borderBottomColor = 'transparent';
+            });
+            this.style.color = 'var(--primary)';
+            this.style.borderBottomColor = 'var(--primary)';
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.getElementById(`tab-${this.dataset.tab}`).style.display = '';
+            if (this.dataset.tab === 'salary') loadSalaryHistory();
+        });
+    });
+
+    async function loadProfile() {
+        const res = await API.get('/profile');
+        if (!res?.ok) return;
+        const emp = res.data.data;
+
+        // Avatar
+        const avatarEl = document.getElementById('profileAvatar');
+        if (emp.Avatar) avatarEl.src = emp.Avatar;
+        else avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(emp.HoTen||'U')}&background=2563EB&color=fff&size=100`;
+
+        document.getElementById('profileName').textContent = emp.HoTen;
+        document.getElementById('profileRole').textContent = emp.TenChucVu || '--';
+        document.getElementById('profileDept').textContent = emp.TenPhongBan || '--';
+        document.getElementById('profileJoinDate').textContent = Utils.formatDate(emp.NgayVaoLam);
+        document.getElementById('profileSalaryBase').textContent = Utils.formatMoney(emp.LuongCoBan);
+        document.getElementById('profileBadge').innerHTML = Utils.statusBadge(emp.TrangThai);
+
+        // Form fields
+        document.getElementById('fHoTen').value = emp.HoTen;
+        document.getElementById('fMaNV').value = emp.MaNV;
+        document.getElementById('fEmail').value = emp.Email || '';
+        document.getElementById('fDienThoai').value = emp.DienThoai || '';
+        document.getElementById('fNgaySinh').value = emp.NgaySinh?.split('T')[0] || '';
+        document.getElementById('fCCCD').value = emp.CCCD || '';
+        document.getElementById('fDiaChi').value = emp.DiaChi || '';
+    }
+
+    async function loadSalaryHistory() {
+        const res = await API.get('/profile/salary');
+        const data = res?.data?.data || [];
+        document.getElementById('salaryHistoryTable').innerHTML = data.length ?
+            data.map(d => `
+                <tr>
+                    <td><strong>T${d.Thang}/${d.Nam}</strong></td>
+                    <td class="money">${Utils.formatMoney(d.TongThuNhap)}</td>
+                    <td class="money negative">-${Utils.formatMoney(d.TongKhauTru)}</td>
+                    <td class="money positive fw-bold">${Utils.formatMoney(d.LuongThucNhan)}</td>
+                    <td>${d.TrangThai==='DaChot'?'<span class="badge badge-finalized">✅ Đã chốt</span>':'<span class="badge badge-pending">⏳ Chưa chốt</span>'}</td>
+                </tr>
+            `).join('') : `<tr><td colspan="5"><div class="empty-state" style="padding:30px">Chưa có bảng lương</div></td></tr>`;
+    }
+
+    // Save profile info
+    document.getElementById('btnSaveInfo').addEventListener('click', async () => {
+        const data = {
+            dienThoai: document.getElementById('fDienThoai').value,
+            diaChi: document.getElementById('fDiaChi').value
+        };
+        const formData = new FormData();
+        Object.entries(data).forEach(([k,v]) => formData.append(k, v));
+        const avatarFile = document.getElementById('avatarFile').files[0];
+        if (avatarFile) formData.append('avatar', avatarFile);
+
+        const res = await API.request('/profile', { method: 'PUT', body: formData });
+        if (res?.ok) { Toast.success('Cập nhật thành công'); loadProfile(); }
+        else Toast.error(res?.data?.message || 'Lỗi cập nhật');
+    });
+
+    // Change password
+    document.getElementById('btnSavePw').addEventListener('click', async () => {
+        const currentPassword = document.getElementById('fCurPw').value;
+        const newPassword = document.getElementById('fNewPw').value;
+        const confirmPassword = document.getElementById('fConfirmPw').value;
+
+        if (!currentPassword || !newPassword || !confirmPassword) return Toast.warning('Vui lòng điền đầy đủ');
+        if (newPassword !== confirmPassword) return Toast.error('Mật khẩu mới không khớp');
+        if (newPassword.length < 6) return Toast.error('Mật khẩu phải ít nhất 6 ký tự');
+
+        const res = await API.put('/profile/password', { currentPassword, newPassword, confirmPassword });
+        if (res?.ok) { Toast.success('Đổi mật khẩu thành công'); document.getElementById('pwForm').reset(); }
+        else Toast.error(res?.data?.message || 'Mật khẩu hiện tại không đúng');
+    });
+
+    // Avatar preview
+    document.getElementById('avatarFile').addEventListener('change', function() {
+        if (this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => document.getElementById('profileAvatar').src = e.target.result;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    loadProfile();
+</script>
+</body>
+</html>
