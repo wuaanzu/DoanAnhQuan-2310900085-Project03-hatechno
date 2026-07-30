@@ -109,16 +109,39 @@ const EmployeeModel = {
         try {
             await conn.beginTransaction();
 
+            const toNull = (v) => (v === undefined || v === '' || v === null ? null : v);
+
+            // Tự động sinh Mã Nhân Viên nếu chưa truyền vào
+            let maNV = toNull(data.maNV);
+            if (!maNV) {
+                const [maxNV] = await conn.execute("SELECT MaNV FROM NhanVien WHERE MaNV LIKE 'NV%' ORDER BY MaNhanVien DESC LIMIT 1");
+                let nextNum = 1;
+                if (maxNV.length > 0 && maxNV[0].MaNV) {
+                    const match = maxNV[0].MaNV.match(/\d+/);
+                    if (match) nextNum = parseInt(match[0], 10) + 1;
+                }
+                maNV = `NV${String(nextNum).padStart(3, '0')}`;
+            }
+
             const [nvResult] = await conn.execute(`
                 INSERT INTO NhanVien
                 (MaNV, HoTen, GioiTinh, NgaySinh, DienThoai, Email, CCCD, DiaChi,
                  NgayVaoLam, MaPhongBan, MaChucVu, TrangThai, Avatar)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [
-                data.maNV, data.hoTen, data.gioiTinh, data.ngaySinh,
-                data.dienThoai, data.email, data.cccd, data.diaChi,
-                data.ngayVaoLam, data.maPhongBan, data.maChucVu,
-                data.trangThai || 'DangLam', data.avatar || null
+                maNV,
+                toNull(data.hoTen),
+                toNull(data.gioiTinh),
+                toNull(data.ngaySinh),
+                toNull(data.dienThoai),
+                toNull(data.email),
+                toNull(data.cccd),
+                toNull(data.diaChi),
+                toNull(data.ngayVaoLam) || new Date().toISOString().split('T')[0],
+                toNull(data.maPhongBan),
+                toNull(data.maChucVu),
+                data.trangThai || 'DangLam',
+                toNull(data.avatar)
             ]);
 
             const maNhanVien = nvResult.insertId;
@@ -129,7 +152,8 @@ const EmployeeModel = {
                     INSERT INTO HopDong (MaNhanVien, LoaiHopDong, NgayBatDau, LuongCoBan)
                     VALUES (?, ?, ?, ?)
                 `, [maNhanVien, data.loaiHopDong || 'Hợp đồng thử việc',
-                    data.ngayVaoLam, data.luongCoBan]);
+                    toNull(data.ngayVaoLam) || new Date().toISOString().split('T')[0],
+                    data.luongCoBan]);
             }
 
             await conn.commit();
@@ -149,18 +173,21 @@ const EmployeeModel = {
         const fields = [];
         const params = [];
 
+        const toNull = (v) => (v === undefined || v === '' || v === null ? null : v);
+
+        if (data.maNV !== undefined) { fields.push('MaNV = ?'); params.push(data.maNV); }
         if (data.hoTen !== undefined) { fields.push('HoTen = ?'); params.push(data.hoTen); }
-        if (data.gioiTinh !== undefined) { fields.push('GioiTinh = ?'); params.push(data.gioiTinh); }
-        if (data.ngaySinh !== undefined) { fields.push('NgaySinh = ?'); params.push(data.ngaySinh); }
-        if (data.dienThoai !== undefined) { fields.push('DienThoai = ?'); params.push(data.dienThoai); }
-        if (data.email !== undefined) { fields.push('Email = ?'); params.push(data.email); }
-        if (data.cccd !== undefined) { fields.push('CCCD = ?'); params.push(data.cccd); }
-        if (data.diaChi !== undefined) { fields.push('DiaChi = ?'); params.push(data.diaChi); }
-        if (data.ngayVaoLam !== undefined) { fields.push('NgayVaoLam = ?'); params.push(data.ngayVaoLam); }
-        if (data.maPhongBan !== undefined) { fields.push('MaPhongBan = ?'); params.push(data.maPhongBan); }
-        if (data.maChucVu !== undefined) { fields.push('MaChucVu = ?'); params.push(data.maChucVu); }
+        if (data.gioiTinh !== undefined) { fields.push('GioiTinh = ?'); params.push(toNull(data.gioiTinh)); }
+        if (data.ngaySinh !== undefined) { fields.push('NgaySinh = ?'); params.push(toNull(data.ngaySinh)); }
+        if (data.dienThoai !== undefined) { fields.push('DienThoai = ?'); params.push(toNull(data.dienThoai)); }
+        if (data.email !== undefined) { fields.push('Email = ?'); params.push(toNull(data.email)); }
+        if (data.cccd !== undefined) { fields.push('CCCD = ?'); params.push(toNull(data.cccd)); }
+        if (data.diaChi !== undefined) { fields.push('DiaChi = ?'); params.push(toNull(data.diaChi)); }
+        if (data.ngayVaoLam !== undefined) { fields.push('NgayVaoLam = ?'); params.push(toNull(data.ngayVaoLam)); }
+        if (data.maPhongBan !== undefined) { fields.push('MaPhongBan = ?'); params.push(toNull(data.maPhongBan)); }
+        if (data.maChucVu !== undefined) { fields.push('MaChucVu = ?'); params.push(toNull(data.maChucVu)); }
         if (data.trangThai !== undefined) { fields.push('TrangThai = ?'); params.push(data.trangThai); }
-        if (data.avatar !== undefined) { fields.push('Avatar = ?'); params.push(data.avatar); }
+        if (data.avatar !== undefined) { fields.push('Avatar = ?'); params.push(toNull(data.avatar)); }
 
         if (fields.length === 0) return false;
 

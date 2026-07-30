@@ -82,7 +82,7 @@
                 <form id="addEmployeeForm">
                     <div class="mb-3">
                         <label class="form-label font-weight-bold">Mã Nhân Viên</label>
-                        <input type="text" class="form-control" id="empCode" placeholder="NV002" required>
+                        <input type="text" class="form-control" id="empCode" placeholder="NV002">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Họ và Tên</label>
@@ -91,18 +91,74 @@
                     <div class="mb-3">
                         <label class="form-label">Phòng ban</label>
                         <select class="form-select" id="empDept">
-                            <option value="Phòng CNTT">Phòng CNTT</option>
-                            <option value="Phòng Nhân sự">Phòng Nhân sự</option>
-                            <option value="Phòng Kế toán">Phòng Kế toán</option>
+                            <!-- Dynamically loaded -->
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Chức vụ</label>
-                        <input type="text" class="form-control" id="empRole" placeholder="Developer / Chuyên viên" required>
+                        <select class="form-select" id="empRole">
+                            <!-- Dynamically loaded -->
+                        </select>
                     </div>
                     <div class="text-end">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                         <button type="submit" class="btn btn-primary">Lưu nhân viên</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SỬA NHÂN VIÊN (Pop-up) -->
+<div class="modal fade" id="editEmployeeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold">Chỉnh Sửa Thông Tin Nhân Viên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editEmployeeForm">
+                    <input type="hidden" id="editEmpId">
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Mã Nhân Viên</label>
+                        <input type="text" class="form-control" id="editEmpCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Họ và Tên</label>
+                        <input type="text" class="form-control" id="editEmpName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Điện thoại</label>
+                        <input type="text" class="form-control" id="editEmpPhone" placeholder="0901234567">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmpEmail" placeholder="email@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phòng ban</label>
+                        <select class="form-select" id="editEmpDept">
+                            <!-- Dynamically loaded -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Chức vụ</label>
+                        <select class="form-select" id="editEmpRole">
+                            <!-- Dynamically loaded -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" id="editEmpStatus">
+                            <option value="DangLam">Chính thức (Đang làm)</option>
+                            <option value="DaNghi">Đã nghỉ việc</option>
+                        </select>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Cập Nhật</button>
                     </div>
                 </form>
             </div>
@@ -125,6 +181,38 @@
         window.location.href = '/login';
     });
 
+    let departmentsList = [];
+    let positionsList = [];
+
+    // Tải danh sách Phòng ban & Chức vụ cho Select Dropdowns
+    async function loadOptions() {
+        try {
+            const token = localStorage.getItem('hrm_token');
+            const [deptRes, posRes] = await Promise.all([
+                fetch('/api/departments', { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch('/api/positions', { headers: { 'Authorization': `Bearer ${token}` } })
+            ]);
+            const deptData = await deptRes.json();
+            const posData = await posRes.json();
+
+            if (deptData.success) {
+                departmentsList = deptData.data;
+                const deptOptions = departmentsList.map(d => `<option value="${d.MaPhongBan}">${d.TenPhongBan}</option>`).join('');
+                document.getElementById('empDept').innerHTML = deptOptions;
+                document.getElementById('editEmpDept').innerHTML = deptOptions;
+            }
+
+            if (posData.success) {
+                positionsList = posData.data;
+                const posOptions = positionsList.map(p => `<option value="${p.MaChucVu}">${p.TenChucVu}</option>`).join('');
+                document.getElementById('empRole').innerHTML = posOptions;
+                document.getElementById('editEmpRole').innerHTML = posOptions;
+            }
+        } catch(err) {
+            console.error('Lỗi tải danh mục phòng ban / chức vụ:', err);
+        }
+    }
+
     // Fetch danh sách nhân viên từ Backend API
     async function loadEmployees() {
         try {
@@ -139,11 +227,11 @@
                     <tr>
                         <td><strong>${e.MaNV}</strong></td>
                         <td>${e.HoTen}</td>
-                        <td>${e.TenPhongBan || 'Phòng CNTT'}</td>
+                        <td>${e.TenPhongBan || 'N/A'}</td>
                         <td>${e.TenChucVu || 'N/A'}</td>
-                        <td><span class="badge bg-success">${e.TrangThai === 'DangLam' ? 'Chính thức' : 'Đã nghỉ'}</span></td>
+                        <td><span class="badge ${e.TrangThai === 'DangLam' ? 'bg-success' : 'bg-secondary'}">${e.TrangThai === 'DangLam' ? 'Chính thức' : 'Đã nghỉ'}</span></td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editEmp(${e.MaNhanVien})"><i class="fa-solid fa-pen"></i></button>
                             <button class="btn btn-sm btn-outline-danger btn-delete" onclick="deleteEmp(${e.MaNhanVien})"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
@@ -154,6 +242,37 @@
         }
     }
 
+    // Mở modal sửa nhân viên
+    async function editEmp(id) {
+        try {
+            const token = localStorage.getItem('hrm_token');
+            const res = await fetch(`/api/employees/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const result = await res.json();
+            if (result.success && result.data) {
+                const emp = result.data;
+                document.getElementById('editEmpId').value = emp.MaNhanVien;
+                document.getElementById('editEmpCode').value = emp.MaNV || '';
+                document.getElementById('editEmpName').value = emp.HoTen || '';
+                document.getElementById('editEmpPhone').value = emp.DienThoai || '';
+                document.getElementById('editEmpEmail').value = emp.Email || '';
+                if (emp.MaPhongBan) document.getElementById('editEmpDept').value = emp.MaPhongBan;
+                if (emp.MaChucVu) document.getElementById('editEmpRole').value = emp.MaChucVu;
+                document.getElementById('editEmpStatus').value = emp.TrangThai || 'DangLam';
+
+                const editModal = new bootstrap.Modal(document.getElementById('editEmployeeModal'));
+                editModal.show();
+            } else {
+                alert(result.message || 'Không lấy được thông tin nhân viên');
+            }
+        } catch(err) {
+            console.error('Lỗi lấy thông tin nhân viên:', err);
+            alert('Lỗi tải thông tin nhân viên');
+        }
+    }
+
+    // Xóa nhân viên
     async function deleteEmp(id) {
         if (!confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) return;
         const token = localStorage.getItem('hrm_token');
@@ -170,14 +289,17 @@
         }
     }
 
+    // Xử lý submit Form Thêm Nhân Viên
     document.getElementById('addEmployeeForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        const maNV = document.getElementById('empCode').value;
         const hoTen = document.getElementById('empName').value;
-        const maPhongBan = 1; // Mặc định phòng ban
-        const maChucVu = 1; // Mặc định chức vụ
+        const maPhongBan = document.getElementById('empDept').value;
+        const maChucVu = document.getElementById('empRole').value;
 
         const token = localStorage.getItem('hrm_token');
         const formData = new FormData();
+        if (maNV) formData.append('maNV', maNV);
         formData.append('hoTen', hoTen);
         formData.append('maPhongBan', maPhongBan);
         formData.append('maChucVu', maChucVu);
@@ -198,7 +320,49 @@
         }
     });
 
-    loadEmployees();
+    // Xử lý submit Form Sửa Nhân Viên
+    document.getElementById('editEmployeeForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const id = document.getElementById('editEmpId').value;
+        const maNV = document.getElementById('editEmpCode').value;
+        const hoTen = document.getElementById('editEmpName').value;
+        const dienThoai = document.getElementById('editEmpPhone').value;
+        const email = document.getElementById('editEmpEmail').value;
+        const maPhongBan = document.getElementById('editEmpDept').value;
+        const maChucVu = document.getElementById('editEmpRole').value;
+        const trangThai = document.getElementById('editEmpStatus').value;
+
+        const token = localStorage.getItem('hrm_token');
+        const formData = new FormData();
+        formData.append('maNV', maNV);
+        formData.append('hoTen', hoTen);
+        formData.append('dienThoai', dienThoai);
+        formData.append('email', email);
+        formData.append('maPhongBan', maPhongBan);
+        formData.append('maChucVu', maChucVu);
+        formData.append('trangThai', trangThai);
+
+        const res = await fetch(`/api/employees/${id}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('Cập nhật nhân viên thành công!');
+            bootstrap.Modal.getInstance(document.getElementById('editEmployeeModal')).hide();
+            loadEmployees();
+        } else {
+            alert(data.message || 'Lỗi cập nhật nhân viên!');
+        }
+    });
+
+    // Khởi tạo trang
+    async function init() {
+        await loadOptions();
+        await loadEmployees();
+    }
+    init();
 </script>
 </body>
 </html>
