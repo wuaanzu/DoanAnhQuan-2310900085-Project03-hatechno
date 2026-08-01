@@ -8,7 +8,11 @@ const RewardModel = {
 
     getAll: async (options = {}) => {
         const { page = 1, limit = 20, maNhanVien = '', loai = '', search = '' } = options;
-        const offset = (page - 1) * limit;
+
+        // Ép kiểu số nguyên an toàn cho LIMIT/OFFSET (chặn NaN/SQL injection)
+        const safeLimit = Math.max(1, parseInt(limit, 10) || 20);
+        const safePage = Math.max(1, parseInt(page, 10) || 1);
+        const safeOffset = (safePage - 1) * safeLimit;
 
         let where = 'WHERE 1=1';
         const params = [];
@@ -20,6 +24,10 @@ const RewardModel = {
             params.push(`%${search}%`, `%${search}%`);
         }
 
+        // Lưu ý: LIMIT/OFFSET được chèn trực tiếp (đã ép kiểu số an toàn ở trên)
+        // thay vì dùng dấu ? — vì mysql2 (bản mới) hay báo lỗi
+        // "ER_WRONG_ARGUMENTS / Incorrect arguments to mysqld_stmt_execute"
+        // khi dùng execute() với placeholder cho LIMIT/OFFSET.
         const query = `
             SELECT kt.*, nv.HoTen, nv.MaNV, pb.TenPhongBan
             FROM KhenThuongKyLuat kt
@@ -27,9 +35,8 @@ const RewardModel = {
             LEFT JOIN PhongBan pb ON nv.MaPhongBan = pb.MaPhongBan
             ${where}
             ORDER BY kt.Ngay DESC
-            LIMIT ? OFFSET ?
+            LIMIT ${safeLimit} OFFSET ${safeOffset}
         `;
-        params.push(Number(limit), Number(offset));
         const [rows] = await db.execute(query, params);
         return rows;
     },

@@ -43,6 +43,7 @@ const getStats = async (req, res) => {
                 dangLam: activeEmployees,
                 nghiViec: resignedEmployees,
                 tongPhongBan: totalDepartments,
+                soPhongBan: totalDepartments,
                 tongLuong: salaryThisMonth?.TongLuong || 0,
                 tongThuNhap: salaryThisMonth?.TongThuNhap || 0,
                 tongKhauTru: salaryThisMonth?.TongKhauTru || 0,

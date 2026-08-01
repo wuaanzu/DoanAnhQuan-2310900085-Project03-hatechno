@@ -8,7 +8,8 @@ const getAll = async (req, res) => {
         const departments = await DepartmentModel.getAll();
         return res.json({ success: true, data: departments });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Lỗi lấy phòng ban' });
+        console.error('Lỗi lấy phòng ban:', error);
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -18,7 +19,8 @@ const getOne = async (req, res) => {
         if (!dept) return res.status(404).json({ success: false, message: 'Không tìm thấy phòng ban' });
         return res.json({ success: true, data: dept });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
+        console.error('Lỗi lấy 1 phòng ban:', error);
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -31,7 +33,8 @@ const create = async (req, res) => {
         const dept = await DepartmentModel.findById(id);
         return res.status(201).json({ success: true, message: 'Thêm phòng ban thành công', data: dept });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Lỗi thêm phòng ban' });
+        console.error('Lỗi thêm phòng ban:', error);
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -43,7 +46,8 @@ const update = async (req, res) => {
         const updated = await DepartmentModel.findById(req.params.id);
         return res.json({ success: true, message: 'Cập nhật thành công', data: updated });
     } catch (error) {
-        return res.status(500).json({ success: false, message: 'Lỗi cập nhật' });
+        console.error('Lỗi cập nhật phòng ban:', error);
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -52,6 +56,7 @@ const remove = async (req, res) => {
         await DepartmentModel.delete(req.params.id);
         return res.json({ success: true, message: 'Xóa phòng ban thành công' });
     } catch (error) {
+        console.error('Lỗi xóa phòng ban:', error);
         return res.status(500).json({ success: false, message: error.message });
     }
 };

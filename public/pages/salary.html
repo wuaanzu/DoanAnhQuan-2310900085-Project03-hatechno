@@ -4,6 +4,7 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bảng lương - HATECHNO HRM</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/hrm-custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -21,7 +22,7 @@
             <a href="/rewards" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-trophy"></i></div><span class="nav-label">Thưởng / KL</span></a>
             <a href="/leaves" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-xmark"></i></div><span class="nav-label">Nghỉ phép</span></a>
             <a href="/reports" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-bar"></i></div><span class="nav-label">Báo cáo</span></a>
-            <a href="/profile" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-user"></i></div><span class="nav-label">Hồ sơ</span></a>
+            <a href="/profile" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-user"></i></div><span class="nav-label">Hồ sơ cá nhân</span></a>
         </nav>
         <div class="sidebar-footer"><div class="sidebar-user"><img src="" class="sidebar-user-avatar" id="sidebarAvatar" alt=""><div class="sidebar-user-info"><div class="sidebar-user-name" id="sidebarUserName"></div><div class="sidebar-user-role" id="sidebarUserRole"></div></div></div></div>
     </aside>
@@ -47,7 +48,6 @@
                 <div class="filter-bar">
                     <select class="form-control" id="filterThang">
                         <option value="">Tất cả tháng</option>
-                        ${Array.from({length:12},(_,i)=>`<option value="${i+1}"${i+1==new Date().getMonth()+1?' selected':''}>Tháng ${i+1}</option>`).join('')}
                     </select>
                     <select class="form-control" id="filterNam">
                         <option value="2026">2026</option><option value="2025">2025</option>
@@ -61,12 +61,12 @@
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead>
-                            <tr>
-                                <th>STT</th><th>Nhân viên</th><th>Phòng ban</th>
-                                <th>Tháng/Năm</th><th>Tổng thu nhập</th>
-                                <th>Khấu trừ</th><th>Thực nhận</th>
-                                <th>Trạng thái</th><th style="text-align:center">Thao tác</th>
-                            </tr>
+                        <tr>
+                            <th>STT</th><th>Nhân viên</th><th>Phòng ban</th>
+                            <th>Tháng/Năm</th><th>Tổng thu nhập</th>
+                            <th>Khấu trừ</th><th>Thực nhận</th>
+                            <th>Trạng thái</th><th style="text-align:center">Thao tác</th>
+                        </tr>
                         </thead>
                         <tbody id="tableBody"></tbody>
                     </table>
@@ -89,7 +89,7 @@
                 <div class="grid-2">
                     <div class="form-group"><label class="form-label">Nhân viên <span class="required">*</span></label><select class="form-control" id="fNhanVien"><option value="">-- Chọn NV --</option></select></div>
                     <div class="form-group"><label class="form-label">Tháng <span class="required">*</span></label>
-                        <select class="form-control" id="fThang">${Array.from({length:12},(_,i)=>`<option value="${i+1}"${i+1==new Date().getMonth()+1?' selected':''}>Tháng ${i+1}</option>`).join('')}</select>
+                        <select class="form-control" id="fThang"></select>
                     </div>
                     <div class="form-group"><label class="form-label">Năm</label><input type="number" class="form-control" id="fNam" value="2026"></div>
                     <div class="form-group"><label class="form-label">Lương cơ bản</label><input type="number" class="form-control" id="fLuongCoBan" placeholder="10000000"></div>
@@ -136,6 +136,18 @@
 <script>
     AuthCheck.require();
     let currentPage = 1, employees = [];
+
+    // Sinh danh sách tháng (1-12) cho 2 dropdown: filterThang và fThang
+    function populateMonthSelects() {
+        const currentMonth = new Date().getMonth() + 1;
+        let optionsHtml = '';
+        for (let i = 1; i <= 12; i++) {
+            optionsHtml += `<option value="${i}"${i === currentMonth ? ' selected' : ''}>Tháng ${i}</option>`;
+        }
+        document.getElementById('filterThang').insertAdjacentHTML('beforeend', optionsHtml);
+        document.getElementById('fThang').innerHTML = optionsHtml;
+    }
+    populateMonthSelects();
 
     async function loadDropdowns() {
         const res = await API.get('/employees/simple');

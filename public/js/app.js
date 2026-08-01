@@ -119,6 +119,7 @@ function renderLayout(activePage) {
     const user = API.getUser();
     if (!user) return;
     const isManager = hasRole(['Admin','NhanSu']);
+    const isEmployee = user.tenQuyen === 'NhanVien';
     const avatar = user.avatar
         ? user.avatar
         : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.hoTen||'U')}&background=2563EB&color=fff&size=36`;
@@ -136,8 +137,10 @@ function renderLayout(activePage) {
         { page:'profile', icon:'fa-circle-user', label:'Hồ sơ cá nhân', always:true },
     ];
 
+    const employeeOnlyPages = ['attendance', 'salary', 'rewards', 'leaves', 'profile'];
+
     const sidebarItems = navItems
-        .filter(n => n.always || (isManager && n.manager))
+        .filter(n => isEmployee ? employeeOnlyPages.includes(n.page) : (n.always || (isManager && n.manager)))
         .map(n => `
             <li class="nav-item">
                 <a href="/${n.page}" class="nav-link px-3 py-2 rounded-2 mx-2 ${activePage===n.page?'active text-white bg-primary':'text-white-50'}">

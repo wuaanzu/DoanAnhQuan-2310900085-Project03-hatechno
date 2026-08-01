@@ -33,7 +33,7 @@
 
             <!-- Stat Cards (style PhamVanVu) -->
             <div class="row g-3 mb-4" id="statsRow">
-                <div class="col-6 col-lg-3"><div class="card stat-card shadow-sm h-100">
+                <div class="col-6 col-lg-3"><a href="/employees" class="text-decoration-none"><div class="card stat-card shadow-sm h-100 stat-card-clickable">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <div class="stat-icon bg-primary-subtle text-primary"><i class="fa-solid fa-users"></i></div>
@@ -42,8 +42,8 @@
                         <div class="stat-value text-dark" id="s_total">--</div>
                         <div class="stat-label mt-1">Tổng nhân viên</div>
                     </div>
-                </div></div>
-                <div class="col-6 col-lg-3"><div class="card stat-card shadow-sm h-100">
+                </div></a></div>
+                <div class="col-6 col-lg-3"><a href="/employees" class="text-decoration-none"><div class="card stat-card shadow-sm h-100 stat-card-clickable">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <div class="stat-icon bg-success-subtle text-success"><i class="fa-solid fa-user-check"></i></div>
@@ -52,8 +52,8 @@
                         <div class="stat-value text-dark" id="s_active">--</div>
                         <div class="stat-label mt-1">Đang làm việc</div>
                     </div>
-                </div></div>
-                <div class="col-6 col-lg-3"><div class="card stat-card shadow-sm h-100">
+                </div></a></div>
+                <div class="col-6 col-lg-3"><a href="/departments" class="text-decoration-none"><div class="card stat-card shadow-sm h-100 stat-card-clickable">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <div class="stat-icon bg-warning-subtle text-warning"><i class="fa-solid fa-building"></i></div>
@@ -62,8 +62,8 @@
                         <div class="stat-value text-dark" id="s_dept">--</div>
                         <div class="stat-label mt-1">Phòng ban</div>
                     </div>
-                </div></div>
-                <div class="col-6 col-lg-3"><div class="card stat-card shadow-sm h-100">
+                </div></a></div>
+                <div class="col-6 col-lg-3"><a href="/salary" class="text-decoration-none"><div class="card stat-card shadow-sm h-100 stat-card-clickable">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <div class="stat-icon bg-info-subtle text-info"><i class="fa-solid fa-money-bill-wave"></i></div>
@@ -72,8 +72,12 @@
                         <div class="stat-value text-dark" style="font-size:16px" id="s_salary">--</div>
                         <div class="stat-label mt-1">Quỹ lương</div>
                     </div>
-                </div></div>
+                </div></a></div>
             </div>
+            <style>
+                .stat-card-clickable { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+                .stat-card-clickable:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08) !important; }
+            </style>
 
             <!-- Charts -->
             <div class="row g-3 mb-4">
