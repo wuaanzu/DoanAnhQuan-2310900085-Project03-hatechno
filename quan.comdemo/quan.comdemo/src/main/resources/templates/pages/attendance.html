@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chấm công - HATECHNO HRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/hrm-custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="sidebar-mobile-overlay" id="sidebarOverlay"></div>
+<div class="app-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="sidebar-brand">HATECHNO<span>HR Management</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-pie"></i></div><span class="nav-label">Dashboard</span></a>
+            <a href="/employees" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-users"></i></div><span class="nav-label">Nhân viên</span></a>
+            <a href="/departments" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-building"></i></div><span class="nav-label">Phòng ban</span></a>
+            <a href="/positions" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-briefcase"></i></div><span class="nav-label">Chức vụ</span></a>
+            <a href="/attendance" class="nav-item active"><div class="nav-icon"><i class="fa-solid fa-calendar-check"></i></div><span class="nav-label">Chấm công</span></a>
+            <a href="/schedule" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-days"></i></div><span class="nav-label">Theo dõi Lịch làm</span></a>
+            <a href="/salary" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-money-bill-wave"></i></div><span class="nav-label">Bảng lương</span></a>
+            <a href="/my-salary" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-wallet"></i></div><span class="nav-label">Lương cá nhân</span></a>
+            <a href="/rewards" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-trophy"></i></div><span class="nav-label">Thưởng / KL</span></a>
+            <a href="/leaves" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-xmark"></i></div><span class="nav-label">Nghỉ phép</span></a>
+            <a href="/reports" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-bar"></i></div><span class="nav-label">Báo cáo</span></a>
+            <a href="/profile" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-user"></i></div><span class="nav-label">Hồ sơ cá nhân</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="" class="sidebar-user-avatar" id="sidebarAvatar" alt="">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarUserName"></div>
+                    <div class="sidebar-user-role" id="sidebarUserRole"></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <nav class="navbar-top">
+            <button class="navbar-toggle" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+            <span class="navbar-title">Quản lý Chấm công</span>
+            <div class="navbar-actions" style="margin-left:auto">
+                <button id="themeToggle" class="theme-toggle"></button>
+                <div class="dropdown">
+                    <img src="" alt="" class="navbar-avatar" id="navAvatar" data-dropdown-toggle="navDropdown">
+                    <div class="dropdown-menu" id="navDropdown">
+                        <a href="/profile" class="dropdown-item"><i class="fa-solid fa-user"></i> Hồ sơ</a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="page-content">
+            <div class="page-header">
+                <div class="page-title"><i class="fa-solid fa-calendar-check"></i> Quản lý Chấm công</div>
+                <button class="btn btn-primary" id="btnAdd" data-manager-only><i class="fa-solid fa-plus"></i> Thêm chấm công</button>
+            </div>
+
+            <div class="card">
+                <div class="filter-bar">
+                    <select class="form-control" id="filterThang" style="max-width:140px">
+                        <option value="">Tất cả tháng</option>
+                    </select>
+                    <select class="form-control" id="filterNam" style="max-width:100px">
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                    </select>
+                    <div class="input-group" style="flex:1;max-width:260px">
+                        <span class="input-group-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" class="form-control" id="filterSearch" placeholder="Tìm nhân viên...">
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Nhân viên</th>
+                            <th>Ngày làm</th>
+                            <th>Giờ vào</th>
+                            <th>Giờ ra</th>
+                            <th>Số giờ làm</th>
+                            <th>Tăng ca</th>
+                            <th>Trạng thái</th>
+                            <th style="text-align:center">Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination-wrap">
+                    <div class="pagination-info" id="paginationInfo"></div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm / Sửa Chấm Công -->
+<div class="modal" id="mainModal">
+    <div class="modal-card" style="max-width:550px">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitle"><i class="fa-solid fa-calendar-check"></i> Thêm chấm công</div>
+            <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="mainForm">
+                <input type="hidden" id="itemId">
+                <div class="form-group" id="nhanVienGroup">
+                    <label class="form-label">Nhân viên <span class="required">*</span></label>
+                    <select class="form-control" id="fNhanVien" required>
+                        <option value="">-- Chọn nhân viên --</option>
+                    </select>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Ngày làm <span class="required">*</span></label>
+                        <input type="date" class="form-control" id="fNgayLam" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-control" id="fTrangThai">
+                            <option value="DungGio">Đúng giờ</option>
+                            <option value="DiMuon">Đi muộn</option>
+                            <option value="VeSom">Về sớm</option>
+                            <option value="VangMat">Vắng mặt</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Giờ vào</label>
+                        <input type="time" class="form-control" id="fGioVao" value="08:00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Giờ ra</label>
+                        <input type="time" class="form-control" id="fGioRa" value="17:00">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Số giờ làm</label>
+                        <input type="number" step="0.5" class="form-control" id="fSoGioLam" value="8">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tăng ca (giờ)</label>
+                        <input type="number" step="0.5" class="form-control" id="fTangCa" value="0">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="modalCancel">Hủy</button>
+            <button class="btn btn-primary" id="btnSave"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/utils.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    AuthCheck.require();
+    let currentPage = 1, editId = null;
+
+    (function initMonthFilter() {
+        const sel = document.getElementById('filterThang');
+        for (let i = 1; i <= 12; i++) sel.innerHTML += `<option value="${i}">Tháng ${i}</option>`;
+    })();
+
+    async function loadEmployees() {
+        if (AuthCheck.hasRole(['Admin','NhanSu'])) {
+            const res = await API.get('/employees/simple');
+            const sel = document.getElementById('fNhanVien');
+            sel.innerHTML = '<option value="">-- Chọn NV --</option>' + (res?.data?.data||[]).map(e => `<option value="${e.MaNhanVien}">${Utils.escHtml(e.HoTen)}</option>`).join('');
+        }
+    }
+
+    async function loadData() {
+        const params = Utils.buildQuery({
+            page: currentPage, limit: 10,
+            thang: document.getElementById('filterThang').value,
+            nam: document.getElementById('filterNam').value,
+            search: document.getElementById('filterSearch').value
+        });
+        const res = await API.get(`/attendance?${params}`);
+        if (!res?.ok) return;
+        const { data, pagination } = res.data;
+        const offset = (pagination.page - 1) * pagination.limit;
+        const isManager = AuthCheck.hasRole(['Admin','NhanSu']);
+
+        document.getElementById('tableBody').innerHTML = data.length ?
+            data.map((d,i) => `
+                <tr>
+                    <td>${offset+i+1}</td>
+                    <td><div class="employee-cell">${Utils.getAvatarHtml(d.Avatar,d.HoTen,32)}<div><div class="employee-name">${Utils.escHtml(d.HoTen)}</div><div class="employee-code">${Utils.escHtml(d.TenPhongBan||'')}</div></div></div></td>
+                    <td>${Utils.formatDate(d.NgayLam)}</td>
+                    <td><span style="font-weight:600">${d.GioVao||'--'}</span></td>
+                    <td><span style="font-weight:600">${d.GioRa||'--'}</span></td>
+                    <td><span class="badge badge-info">${d.SoGioLam||8} giờ</span></td>
+                    <td><span class="badge badge-warning">+${d.TangCa||0} giờ</span></td>
+                    <td><span class="badge badge-success">${d.TrangThai||'Đúng giờ'}</span></td>
+                    <td style="text-align:center">
+                        <div class="action-buttons" style="justify-content:center">
+                            ${isManager ? `
+                            <button class="btn btn-sm btn-outline-primary btn-icon" onclick="editItem(${d.MaChamCong})" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-danger btn-icon" onclick="delItem(${d.MaChamCong})" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                            ` : '--'}
+                        </div>
+                    </td>
+                </tr>
+            `).join('') : `<tr><td colspan="9"><div class="empty-state"><i class="fa-solid fa-calendar-xmark"></i><p>Không có dữ liệu chấm công</p></div></td></tr>`;
+
+        document.getElementById('paginationInfo').textContent = `Tổng: ${pagination.total} bản ghi`;
+        const pag = document.getElementById('pagination');
+        pag.innerHTML = '';
+        for (let p=1; p<=Math.min(pagination.totalPages,8); p++) {
+            const btn = document.createElement('button');
+            btn.className = `page-btn${p===pagination.page?' active':''}`;
+            btn.textContent = p; btn.onclick = () => { currentPage=p; loadData(); };
+            pag.appendChild(btn);
+        }
+    }
+
+    document.getElementById('btnAdd').addEventListener('click', async () => {
+        editId = null;
+        document.getElementById('mainForm').reset();
+        document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-calendar-check"></i> Thêm chấm công';
+        document.getElementById('fNgayLam').value = new Date().toISOString().split('T')[0];
+        await loadEmployees();
+        document.getElementById('mainModal').classList.add('active');
+    });
+
+    document.getElementById('modalClose').addEventListener('click', () => document.getElementById('mainModal').classList.remove('active'));
+    document.getElementById('modalCancel').addEventListener('click', () => document.getElementById('mainModal').classList.remove('active'));
+
+    async function editItem(id) {
+        const res = await API.get(`/attendance/${id}`);
+        if (!res?.ok) return;
+        const d = res.data.data; editId = id;
+        await loadEmployees();
+        document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen"></i> Sửa chấm công';
+        document.getElementById('fNhanVien').value = d.MaNhanVien || '';
+        document.getElementById('fNgayLam').value = d.NgayLam || '';
+        document.getElementById('fGioVao').value = d.GioVao || '08:00';
+        document.getElementById('fGioRa').value = d.GioRa || '17:00';
+        document.getElementById('fSoGioLam').value = d.SoGioLam || 8;
+        document.getElementById('fTangCa').value = d.TangCa || 0;
+        document.getElementById('fTrangThai').value = d.TrangThai || 'DungGio';
+        document.getElementById('mainModal').classList.add('active');
+    }
+
+    function delItem(id) {
+        Confirm.show('Xóa bản ghi chấm công này?', 'Xóa chấm công', 'Xóa', async () => {
+            const res = await API.delete(`/attendance/${id}`);
+            res?.ok ? (Toast.success('Đã xóa'), loadData()) : Toast.error('Lỗi xóa');
+        });
+    }
+
+    document.getElementById('btnSave').addEventListener('click', async () => {
+        const data = {
+            maNhanVien: document.getElementById('fNhanVien').value || undefined,
+            ngayLam: document.getElementById('fNgayLam').value,
+            gioVao: document.getElementById('fGioVao').value,
+            gioRa: document.getElementById('fGioRa').value,
+            soGioLam: document.getElementById('fSoGioLam').value,
+            tangCa: document.getElementById('fTangCa').value,
+            trangThai: document.getElementById('fTrangThai').value
+        };
+        if (!data.ngayLam) return Toast.warning('Vui lòng chọn ngày làm');
+        const res = editId ? await API.put(`/attendance/${editId}`, data) : await API.post('/attendance', data);
+        if (res?.ok) { Toast.success(editId?'Đã cập nhật':'Đã thêm'); document.getElementById('mainModal').classList.remove('active'); loadData(); }
+        else Toast.error(res?.data?.message || 'Lỗi lưu');
+    });
+
+    document.getElementById('filterThang').addEventListener('change', () => { currentPage=1; loadData(); });
+    document.getElementById('filterNam').addEventListener('change', () => { currentPage=1; loadData(); });
+    document.getElementById('filterSearch').addEventListener('input', Utils.debounce(() => { currentPage=1; loadData(); }, 400));
+
+    loadData();
+</script>
+</body>
+</html>

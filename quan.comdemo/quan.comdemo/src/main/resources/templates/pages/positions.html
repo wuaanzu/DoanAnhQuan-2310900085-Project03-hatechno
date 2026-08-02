@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chức vụ - HATECHNO HRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/hrm-custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="sidebar-mobile-overlay" id="sidebarOverlay"></div>
+<div class="app-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="sidebar-brand">HATECHNO<span>HR Management</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-pie"></i></div><span class="nav-label">Dashboard</span></a>
+            <a href="/employees" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-users"></i></div><span class="nav-label">Nhân viên</span></a>
+            <a href="/departments" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-building"></i></div><span class="nav-label">Phòng ban</span></a>
+            <a href="/positions" class="nav-item active"><div class="nav-icon"><i class="fa-solid fa-briefcase"></i></div><span class="nav-label">Chức vụ</span></a>
+            <a href="/attendance" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-check"></i></div><span class="nav-label">Chấm công</span></a>
+            <a href="/schedule" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-days"></i></div><span class="nav-label">Theo dõi Lịch làm</span></a>
+            <a href="/salary" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-money-bill-wave"></i></div><span class="nav-label">Bảng lương</span></a>
+            <a href="/my-salary" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-wallet"></i></div><span class="nav-label">Lương cá nhân</span></a>
+            <a href="/rewards" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-trophy"></i></div><span class="nav-label">Thưởng / KL</span></a>
+            <a href="/leaves" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-xmark"></i></div><span class="nav-label">Nghỉ phép</span></a>
+            <a href="/reports" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-bar"></i></div><span class="nav-label">Báo cáo</span></a>
+            <a href="/profile" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-user"></i></div><span class="nav-label">Hồ sơ cá nhân</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="" class="sidebar-user-avatar" id="sidebarAvatar" alt="">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarUserName"></div>
+                    <div class="sidebar-user-role" id="sidebarUserRole"></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <nav class="navbar-top">
+            <button class="navbar-toggle" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+            <span class="navbar-title">Quản lý Chức vụ</span>
+            <div class="navbar-actions" style="margin-left:auto">
+                <button id="themeToggle" class="theme-toggle"></button>
+                <div class="dropdown">
+                    <img src="" alt="" class="navbar-avatar" id="navAvatar" data-dropdown-toggle="navDropdown">
+                    <div class="dropdown-menu" id="navDropdown">
+                        <a href="/profile" class="dropdown-item"><i class="fa-solid fa-user"></i> Hồ sơ</a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="page-content">
+            <div class="page-header">
+                <div class="page-title"><i class="fa-solid fa-briefcase"></i> Quản lý Chức vụ</div>
+                <button class="btn btn-primary" id="btnAdd"><i class="fa-solid fa-plus"></i> Thêm chức vụ</button>
+            </div>
+
+            <div class="card">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên chức vụ</th>
+                            <th>Phụ cấp</th>
+                            <th>Số NV</th>
+                            <th>Mô tả</th>
+                            <th style="text-align:center">Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination-wrap">
+                    <div class="pagination-info" id="paginationInfo"></div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm/Sửa Chức vụ -->
+<div class="modal" id="mainModal">
+    <div class="modal-card" style="max-width:500px">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitle"><i class="fa-solid fa-briefcase"></i> Thêm chức vụ</div>
+            <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="mainForm">
+                <input type="hidden" id="itemId">
+                <div class="form-group">
+                    <label class="form-label">Tên chức vụ <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="fTen" placeholder="Nhập tên chức vụ..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phụ cấp (VNĐ)</label>
+                    <input type="number" class="form-control" id="fPhuCap" placeholder="Nhập phụ cấp...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-control" id="fMoTa" rows="3" placeholder="Nhập mô tả chức vụ..."></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="modalCancel">Hủy</button>
+            <button class="btn btn-primary" id="btnSave"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/utils.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    AuthCheck.require();
+    let editId = null, currentPage = 1;
+
+    async function loadData() {
+        const res = await API.get('/positions');
+        const data = res?.data?.data || [];
+        const isManager = AuthCheck.hasRole(['Admin','NhanSu']);
+
+        const totalPages = Math.ceil(data.length / 10) || 1;
+        const displayData = data.slice((currentPage - 1) * 10, currentPage * 10);
+        const offset = (currentPage - 1) * 10;
+
+        document.getElementById('tableBody').innerHTML = displayData.length
+            ? displayData.map((d,i) => `<tr>
+                <td>${offset+i+1}</td>
+                <td><strong>${Utils.escHtml(d.TenChucVu)}</strong></td>
+                <td><span style="font-weight:600;color:var(--success)">${Utils.formatMoney(d.PhuCap)}</span></td>
+                <td><span class="badge badge-info">${d.SoNhanVien||0} NV</span></td>
+                <td style="font-size:12px;color:var(--text-secondary)">${Utils.escHtml(d.MoTa||'--')}</td>
+                <td style="text-align:center">
+                    <div class="action-buttons" style="justify-content:center">
+                        ${isManager ? `
+                        <button class="btn btn-sm btn-outline-primary btn-icon" onclick="editItem(${d.MaChucVu})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-danger btn-icon" onclick="delItem(${d.MaChucVu},'${Utils.escHtml(d.TenChucVu)}')"><i class="fa-solid fa-trash"></i></button>
+                        ` : '--'}
+                    </div>
+                </td>
+            </tr>`).join('')
+            : `<tr><td colspan="6"><div class="empty-state"><i class="fa-solid fa-briefcase"></i><p>Chưa có chức vụ</p></div></td></tr>`;
+
+        document.getElementById('paginationInfo').textContent = `Tổng: ${data.length} chức vụ`;
+        const pag = document.getElementById('pagination');
+        pag.innerHTML = '';
+        for (let p = 1; p <= Math.min(totalPages, 8); p++) {
+            const btn = document.createElement('button');
+            btn.className = `page-btn${p === currentPage ? ' active' : ''}`;
+            btn.textContent = p;
+            btn.onclick = () => { currentPage = p; loadData(); };
+            pag.appendChild(btn);
+        }
+    }
+
+    document.getElementById('btnAdd').addEventListener('click', () => {
+        editId = null;
+        document.getElementById('mainForm').reset();
+        document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-briefcase"></i> Thêm chức vụ';
+        document.getElementById('mainModal').classList.add('active');
+    });
+
+    document.getElementById('modalClose').addEventListener('click', () => document.getElementById('mainModal').classList.remove('active'));
+    document.getElementById('modalCancel').addEventListener('click', () => document.getElementById('mainModal').classList.remove('active'));
+
+    async function editItem(id) {
+        const res = await API.get(`/positions/${id}`);
+        if (!res?.ok) return;
+        const d = res.data.data; editId = id;
+        document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen"></i> Cập nhật chức vụ';
+        document.getElementById('fTen').value = d.TenChucVu || '';
+        document.getElementById('fPhuCap').value = d.PhuCap || '';
+        document.getElementById('fMoTa').value = d.MoTa || '';
+        document.getElementById('mainModal').classList.add('active');
+    }
+
+    function delItem(id, name) {
+        Confirm.show(`Xóa chức vụ <strong>${name}</strong>?`, 'Xóa chức vụ', 'Xóa', async () => {
+            const res = await API.delete(`/positions/${id}`);
+            res?.ok ? (Toast.success('Đã xóa'), loadData()) : Toast.error(res?.data?.message||'Lỗi xóa');
+        });
+    }
+
+    document.getElementById('btnSave').addEventListener('click', async () => {
+        const data = {
+            tenChucVu: document.getElementById('fTen').value.trim(),
+            phuCap: document.getElementById('fPhuCap').value || 0,
+            moTa: document.getElementById('fMoTa').value
+        };
+        if (!data.tenChucVu) return Toast.warning('Vui lòng nhập tên chức vụ');
+        const res = editId ? await API.put(`/positions/${editId}`, data) : await API.post('/positions', data);
+        if (res?.ok) {
+            Toast.success(editId ? 'Cập nhật thành công' : 'Thêm thành công');
+            document.getElementById('mainModal').classList.remove('active');
+            loadData();
+        } else {
+            Toast.error(res?.data?.message || 'Lỗi lưu');
+        }
+    });
+
+    loadData();
+</script>
+</body>
+</html>

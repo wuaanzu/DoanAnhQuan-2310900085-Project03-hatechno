@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - HATECHNO HRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/hrm-custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="sidebar-mobile-overlay" id="sidebarOverlay"></div>
+<div class="app-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="sidebar-brand">HATECHNO<span>HR Management</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard" class="nav-item active"><div class="nav-icon"><i class="fa-solid fa-chart-pie"></i></div><span class="nav-label">Dashboard</span></a>
+            <a href="/employees" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-users"></i></div><span class="nav-label">Nhân viên</span></a>
+            <a href="/departments" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-building"></i></div><span class="nav-label">Phòng ban</span></a>
+            <a href="/positions" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-briefcase"></i></div><span class="nav-label">Chức vụ</span></a>
+            <a href="/attendance" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-check"></i></div><span class="nav-label">Chấm công</span></a>
+            <a href="/schedule" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-days"></i></div><span class="nav-label">Theo dõi Lịch làm</span></a>
+            <a href="/salary" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-money-bill-wave"></i></div><span class="nav-label">Bảng lương</span></a>
+            <a href="/my-salary" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-wallet"></i></div><span class="nav-label">Lương cá nhân</span></a>
+            <a href="/rewards" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-trophy"></i></div><span class="nav-label">Thưởng / KL</span></a>
+            <a href="/leaves" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-calendar-xmark"></i></div><span class="nav-label">Nghỉ phép</span></a>
+            <a href="/reports" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chart-bar"></i></div><span class="nav-label">Báo cáo</span></a>
+            <a href="/profile" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-user"></i></div><span class="nav-label">Hồ sơ cá nhân</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <img src="" class="sidebar-user-avatar" id="sidebarAvatar" alt="">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarUserName"></div>
+                    <div class="sidebar-user-role" id="sidebarUserRole"></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <nav class="navbar-top">
+            <button class="navbar-toggle" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+            <span class="navbar-title">Dashboard Tổng Quan</span>
+            <div class="navbar-actions" style="margin-left:auto">
+                <button id="themeToggle" class="theme-toggle"></button>
+                <div class="dropdown">
+                    <img src="" alt="" class="navbar-avatar" id="navAvatar" data-dropdown-toggle="navDropdown">
+                    <div class="dropdown-menu" id="navDropdown">
+                        <a href="/profile" class="dropdown-item"><i class="fa-solid fa-user"></i> Hồ sơ</a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="page-content">
+            <div class="page-header">
+                <div class="page-title"><i class="fa-solid fa-chart-pie"></i> Dashboard Tổng Quan</div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px">
+                <div class="card" style="padding:18px;margin-bottom:0">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <div>
+                            <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase">Tổng Nhân Viên</div>
+                            <div style="font-size:24px;font-weight:700;color:var(--text-main);margin-top:4px" id="stEmp">--</div>
+                        </div>
+                        <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,99,235,0.1);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-users"></i></div>
+                    </div>
+                </div>
+                <div class="card" style="padding:18px;margin-bottom:0">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <div>
+                            <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase">Phòng Ban</div>
+                            <div style="font-size:24px;font-weight:700;color:var(--text-main);margin-top:4px" id="stDept">--</div>
+                        </div>
+                        <div style="width:44px;height:44px;border-radius:12px;background:rgba(124,58,237,0.1);color:#7C3AED;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-building"></i></div>
+                    </div>
+                </div>
+                <div class="card" style="padding:18px;margin-bottom:0">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <div>
+                            <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase">Tổng Quỹ Lương</div>
+                            <div style="font-size:22px;font-weight:700;color:var(--success);margin-top:4px" id="stSalary">--</div>
+                        </div>
+                        <div style="width:44px;height:44px;border-radius:12px;background:rgba(22,163,74,0.1);color:var(--success);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-money-bill-wave"></i></div>
+                    </div>
+                </div>
+                <div class="card" style="padding:18px;margin-bottom:0">
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <div>
+                            <div style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase">Đơn Chờ Duyệt</div>
+                            <div style="font-size:24px;font-weight:700;color:var(--warning);margin-top:4px" id="stLeaves">--</div>
+                        </div>
+                        <div style="width:44px;height:44px;border-radius:12px;background:rgba(217,119,6,0.1);color:var(--warning);display:flex;align-items:center;justify-content:center;font-size:20px"><i class="fa-solid fa-calendar-xmark"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px">
+                <div class="card" style="padding:20px">
+                    <div class="card-title" style="margin-bottom:16px"><i class="fa-solid fa-chart-line me-2" style="color:var(--primary)"></i>Thống kê Quỹ Lương 6 Tháng</div>
+                    <div style="height:280px"><canvas id="salaryChart"></canvas></div>
+                </div>
+                <div class="card" style="padding:20px">
+                    <div class="card-title" style="margin-bottom:16px"><i class="fa-solid fa-chart-pie me-2" style="color:#7C3AED"></i>Nhân sự theo Phòng Ban</div>
+                    <div style="height:280px"><canvas id="deptChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header"><div class="card-title"><i class="fa-solid fa-clock-rotate-left me-2" style="color:var(--info)"></i>Nhân viên vừa tham gia</div></div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nhân viên</th>
+                                <th>Phòng ban</th>
+                                <th>Chức vụ</th>
+                                <th>Ngày vào làm</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentEmployees"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/utils.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    AuthCheck.require();
+
+    async function loadDashboard() {
+        try {
+            const [statsRes, salaryRes, deptRes] = await Promise.all([
+                API.get('/dashboard/stats'),
+                API.get('/dashboard/chart/salary'),
+                API.get('/dashboard/chart/department')
+            ]);
+
+            if (statsRes?.ok && statsRes.data?.data) {
+                const s = statsRes.data.data;
+                document.getElementById('stEmp').textContent = s.tongNhanVien || 0;
+                document.getElementById('stDept').textContent = s.tongPhongBan || 0;
+                document.getElementById('stSalary').textContent = Utils.formatMoney(s.tongLuong || 0);
+                document.getElementById('stLeaves').textContent = s.choPhepNghiPhep || 0;
+
+                if (s.hoatDongGanDay) {
+                    document.getElementById('recentEmployees').innerHTML = s.hoatDongGanDay.length ? s.hoatDongGanDay.map(e => `
+                        <tr>
+                            <td><div class="employee-cell">${Utils.getAvatarHtml(e.avatar || e.Avatar, e.hoTen || e.HoTen, 32)}<div><div class="employee-name">${Utils.escHtml(e.hoTen || e.HoTen)}</div><div class="employee-code">${Utils.escHtml(e.maNV || e.MaNV || '')}</div></div></div></td>
+                            <td>${Utils.escHtml(e.phongBan?.tenPhongBan || e.TenPhongBan || '--')}</td>
+                            <td>${Utils.escHtml(e.chucVu?.tenChucVu || e.TenChucVu || '--')}</td>
+                            <td>${Utils.formatDate(e.ngayVaoLam || e.NgayVaoLam)}</td>
+                            <td><span class="badge badge-success">${e.trangThai === 'NghiViec' ? 'Đã nghỉ việc' : 'Đang làm việc'}</span></td>
+                        </tr>
+                    `).join('') : `<tr><td colspan="5"><div class="empty-state">Chưa có nhân viên nào</div></td></tr>`;
+                }
+            }
+
+            if (salaryRes?.ok && salaryRes.data?.data) {
+                const sData = salaryRes.data.data;
+                const ctx = document.getElementById('salaryChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: sData.map(d => `T${d.thang || d.Thang}`),
+                        datasets: [{
+                            label: 'Quỹ lương thực chi (VNĐ)',
+                            data: sData.map(d => d.tongLuong || d.TongLuong || d.tongThuNhap || d.TongThuNhap || 0),
+                            borderColor: '#2563EB',
+                            backgroundColor: 'rgba(37,99,235,0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+
+            if (deptRes?.ok && deptRes.data?.data) {
+                const dData = deptRes.data.data;
+                const ctx = document.getElementById('deptChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: dData.map(d => d.tenPhongBan || d.TenPhongBan || 'Phòng ban'),
+                        datasets: [{
+                            data: dData.map(d => d.soLuong || d.SoLuong || d.soNhanVien || d.SoNhanVien || 0),
+                            backgroundColor: ['#2563EB', '#7C3AED', '#16A34A', '#D97706', '#0891B2', '#EC4899', '#8B5CF6']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+        } catch(e) {
+            console.error('Dashboard load error:', e);
+        }
+    }
+
+    loadDashboard();
+</script>
+</body>
+</html>
