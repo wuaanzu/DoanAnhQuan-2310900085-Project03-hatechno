@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ChamCongRepository extends JpaRepository<ChamCong, Integer> {
@@ -28,4 +30,8 @@ public interface ChamCongRepository extends JpaRepository<ChamCong, Integer> {
     List<ChamCong> findByEmployeeAndMonthYear(@Param("maNhanVien") Integer maNhanVien,
                                                @Param("thang") Integer thang,
                                                @Param("nam") Integer nam);
+
+    List<ChamCong> findByNgayLam(LocalDate ngayLam);
+
+    Optional<ChamCong> findByNhanVienMaNhanVienAndNgayLam(Integer maNhanVien, LocalDate ngayLam);
 }

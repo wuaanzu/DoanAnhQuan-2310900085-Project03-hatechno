@@ -38,8 +38,9 @@ public class SalaryController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof Claims claims) {
             String tenQuyen = claims.get("tenQuyen", String.class);
-            if ("NhanVien".equals(tenQuyen)) {
-                maNhanVien = claims.get("maNhanVien", Integer.class);
+            if (!"Admin".equalsIgnoreCase(tenQuyen)) {
+                Integer currentMaNV = claims.get("maNhanVien", Integer.class);
+                maNhanVien = currentMaNV != null ? currentMaNV : -1;
             }
         }
 

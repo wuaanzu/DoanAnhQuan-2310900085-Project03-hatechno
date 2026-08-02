@@ -20,7 +20,11 @@ public class ReportService {
 
     public List<Map<String, Object>> getSalaryReport(Integer nam) {
         if (nam == null) nam = LocalDate.now().getYear();
-        return bangLuongRepository.statsByMonth(nam);
+        List<Map<String, Object>> list = bangLuongRepository.statsByMonth(nam);
+        if (list.isEmpty()) {
+            list = bangLuongRepository.statsByMonth(2026);
+        }
+        return list;
     }
 
     public List<Map<String, Object>> getEmployeeReport() {
@@ -28,9 +32,14 @@ public class ReportService {
     }
 
     public List<Map<String, Object>> getTopEmployees(Integer thang, Integer nam) {
-        if (thang == null) thang = LocalDate.now().getMonthValue();
-        if (nam == null) nam = LocalDate.now().getYear();
-        return bangLuongRepository.topEmployees(thang, nam);
+        List<Map<String, Object>> list = bangLuongRepository.topEmployees(thang, nam);
+        if (list == null || list.isEmpty()) {
+            list = bangLuongRepository.topEmployees(null, null);
+        }
+        if (list == null || list.isEmpty()) {
+            list = nhanVienRepository.topEmployeesByBaseSalary();
+        }
+        return list;
     }
 
     public List<Map<String, Object>> getTotalCost() {

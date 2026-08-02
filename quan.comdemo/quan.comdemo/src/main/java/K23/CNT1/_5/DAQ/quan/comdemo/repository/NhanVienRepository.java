@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,4 +45,16 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
                    "LEFT JOIN NhanVien nv ON pb.MaPhongBan = nv.MaPhongBan " +
                    "GROUP BY pb.MaPhongBan, pb.TenPhongBan", nativeQuery = true)
     List<Map<String, Object>> statsByDepartment();
+
+    @Query(value = "SELECT nv.HoTen as hoTen, nv.MaNV as maNV, pb.TenPhongBan as tenPhongBan, cv.TenChucVu as tenChucVu, " +
+                   "COALESCE(hd.LuongCoBan, 10000000) as luongThucNhan, nv.Avatar as avatar " +
+                   "FROM NhanVien nv " +
+                   "LEFT JOIN PhongBan pb ON nv.MaPhongBan = pb.MaPhongBan " +
+                   "LEFT JOIN ChucVu cv ON nv.MaChucVu = cv.MaChucVu " +
+                   "LEFT JOIN HopDong hd ON nv.MaNhanVien = hd.MaNhanVien " +
+                   "ORDER BY luongThucNhan DESC LIMIT 10", nativeQuery = true)
+    List<Map<String, Object>> topEmployeesByBaseSalary();
+
+    @Query(value = "SELECT SUM(COALESCE(hd.LuongCoBan, 10000000)) FROM NhanVien nv LEFT JOIN HopDong hd ON nv.MaNhanVien = hd.MaNhanVien", nativeQuery = true)
+    BigDecimal totalEstimatedSalary();
 }

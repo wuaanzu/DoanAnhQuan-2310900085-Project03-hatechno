@@ -1,8 +1,20 @@
 # Dependencies
+node_modules/
 /node_modules
+frontend-react/node_modules/
+frontend-react/dist/
 
-# Environment variables
+# Build outputs
+target/
+*.class
+*.jar
+*.war
+
+# Environment & IDE
 .env
+.idea/
+*.iml
+.vscode/
 
 # Logs
 npm-debug.log*

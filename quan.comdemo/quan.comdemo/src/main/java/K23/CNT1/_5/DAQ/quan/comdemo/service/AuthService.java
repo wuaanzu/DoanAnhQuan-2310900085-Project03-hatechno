@@ -43,15 +43,16 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
     public LoginResponse login(LoginRequest request) {
-        if (request.getIdentifier() == null || request.getIdentifier().trim().isEmpty() ||
-            request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+        String identifier = request.getEffectiveIdentifier();
+        String password = request.getEffectivePassword();
+
+        if (identifier == null || password == null) {
             return LoginResponse.builder()
                     .success(false)
                     .message("Vui lòng nhập tên đăng nhập/email và mật khẩu")
                     .build();
         }
 
-        String identifier = request.getIdentifier().trim();
         Optional<TaiKhoan> userOpt = taiKhoanRepository.findByTenDangNhap(identifier);
 
         if (userOpt.isEmpty()) {
@@ -68,8 +69,8 @@ public class AuthService {
         TaiKhoan user = userOpt.get();
 
         // Check password: BCrypt or Plaintext fallback
-        boolean match = passwordEncoder.matches(request.getPassword(), user.getMatKhau()) ||
-                        request.getPassword().equals(user.getMatKhau());
+        boolean match = passwordEncoder.matches(password, user.getMatKhau()) ||
+                        password.equals(user.getMatKhau());
 
         if (!match) {
             return LoginResponse.builder()

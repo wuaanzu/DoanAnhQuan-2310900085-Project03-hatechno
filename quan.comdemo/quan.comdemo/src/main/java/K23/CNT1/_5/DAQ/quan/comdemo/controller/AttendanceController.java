@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,51 @@ public class AttendanceController {
         pagination.put("totalPages", resultPage.getTotalPages());
 
         return ResponseEntity.ok(ApiResponse.ok(resultPage.getContent(), pagination));
+    }
+
+    @GetMapping("/daily")
+    public ResponseEntity<ApiResponse<List<ChamCong>>> getDaily(@RequestParam(required = false) String ngay) {
+        LocalDate date = (ngay != null && !ngay.isEmpty()) ? LocalDate.parse(ngay) : LocalDate.now();
+        List<ChamCong> list = attendanceService.getDailyList(date);
+        return ResponseEntity.ok(ApiResponse.ok(list));
+    }
+
+    @PostMapping("/check-in")
+    public ResponseEntity<ApiResponse<ChamCong>> checkIn() {
+        try {
+            ChamCong cc = attendanceService.checkInCurrentUser();
+            return ResponseEntity.ok(ApiResponse.ok("Điểm danh vào thành công", cc));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/check-out")
+    public ResponseEntity<ApiResponse<ChamCong>> checkOut() {
+        try {
+            ChamCong cc = attendanceService.checkOutCurrentUser();
+            return ResponseEntity.ok(ApiResponse.ok("Điểm danh ra thành công", cc));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/admin-check-in")
+    public ResponseEntity<ApiResponse<ChamCong>> adminCheckIn(@RequestBody Map<String, Object> body) {
+        try {
+            ChamCong cc = attendanceService.create(body);
+            return ResponseEntity.ok(ApiResponse.ok("Chấm công thành công", cc));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/my-attendance")
+    public ResponseEntity<ApiResponse<List<ChamCong>>> getMyAttendance(
+            @RequestParam(required = false) Integer thang,
+            @RequestParam(required = false) Integer nam) {
+        List<ChamCong> list = attendanceService.getMyAttendance(thang, nam);
+        return ResponseEntity.ok(ApiResponse.ok(list));
     }
 
     @GetMapping("/{id}")
